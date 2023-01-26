@@ -1,7 +1,7 @@
-Install -
+## Install
 
-npm install
+```npm install```
 
-Run - 
+## Run
 
-node server.js
+```node server.js```
