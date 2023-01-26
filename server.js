@@ -38,12 +38,16 @@ wss.on('connection', (ws, req) => {
             const config = JSON.parse(message);
             if (config !== null && config['record-duration-ms'] !== null) {
                 recordDurationMs = config['record-duration-ms'];
-            }
+            } else {
+                recordDurationMs = 7500;
+	    }
             if (config !== null && config['content-type'] !== null) {
                 const contentType = config['content-type'];
                 const rate = contentType.match(/rate=([0-9]+)/);
                 sampleRate = parseInt(rate[1]);
-            }
+            } else {
+                sampleRate = 8000;
+	    }
             console.log(`recordDurationMs = ${recordDurationMs} sampleRate = ${sampleRate}`);
         } else if (message instanceof Buffer) {
             //console.log('received audio');
