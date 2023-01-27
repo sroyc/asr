@@ -1,0 +1,16 @@
+<include>
+  <extension name="Replicant Telephony Challenge" >
+      <condition field="destination_number" expression="^5021$" require-nested="false">
+          <action application="answer"/> 
+	  <action application="speak" data="tts_commandline|en-us|Thank you for calling the Telephony Challenge. I must ask an important question: Is Die Hard a Christmas movie?"/>
+          <action application="set" data="P-wsbridge-websocket-uri=ws://127.0.0.1:3001" />
+          <action application="set" data="P-wsbridge-websocket-content-type=audio%2Fl16%3Brate%3D8000"/>
+          <action application="set" data="wsbridge_record_duration_ms=5000" />
+	  <action application="export" data="execute_on_post_bridge=lua /usr/local/freeswitch/scripts/process_asr_response.lua ${uuid}" />
+          <action application="set" data="wsbridge_asr_response=none" />
+          <action application="set" data="hangup_after_bridge=false" />
+          <action application="bridge" data="wsbridge"/>
+	  <action application="sleep" data="1000" />
+    </condition>
+  </extension>
+</include>

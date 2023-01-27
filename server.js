@@ -89,7 +89,8 @@ function convertSpeechToText(ws, audio_buffer) {
     };
     client.recognize(request)
         .then((response) => {
-            console.log(JSON.stringify(response));
+            console.log(`Google Speech API Response: ${JSON.stringify(response)}`);
+            let message;
             if (response.length > 0) {
                 const transcript = response[0].results[0].alternatives[0].transcript;
                 console.log(`Transcript: ${transcript}`);
@@ -99,16 +100,23 @@ function convertSpeechToText(ws, audio_buffer) {
                 const no = words.includes('no') || words.includes('nope') ||
                     words.includes('dont');
                 const asr = (yes ? 'yes' : (no ? 'no' : 'none'));
-                const message = {
+                message = {
                     asr_response: asr
                 };
-                ws.send(JSON.stringify(message));
             } else {
                 console.log('Could not transcribe.');
-                const message = {
+                message = {
                     asr_response: 'none'
                 };
-                ws.send(JSON.stringify(message));
             }
-        }).catch(console.error);
+            console.log(`ASR response to FreeSWITCH: ${JSON.stringify(message)}`);
+            ws.send(JSON.stringify(message));
+        }).catch((error) => {
+            console.error(error);
+            const message = {
+                asr_response: 'none'
+            }
+            console.log(`ASR response to FreeSWITCH: ${JSON.stringify(message)}`);
+            ws.send(JSON.stringify(message));
+        });
 }
